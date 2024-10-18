@@ -1,9 +1,10 @@
 import java.io.*;
 import java.util.*;
+import java.util.Collections;
 
 public class Graph {
-    private boolean directed; // true -directed graph, false - undirected graph
-    private int n: // number of vertices
+    private boolean directed; // true - directed graph, false - undirected graph
+    private int n; // number of vertices
     private int m; // number of edges
     private List<List<Integer>> adjList; // adjacency list
 
@@ -44,13 +45,18 @@ public class Graph {
         for (int i = 0; i < m; i++) {
             line = br.readLine();
             String[] tokens = line.split(" ");
-            int e1 = Integer.parseInt(tokens[0] - 1);
-            int e2 = Integer.parseInt(tokens[1] - 1);
+            int e1 = Integer.parseInt(tokens[0]) - 1;
+            int e2 = Integer.parseInt(tokens[1]) - 1;
 
             addEdge(e1, e2);
         }
 
         br.close();
+
+        // sorting adjacency list
+        for (List<Integer> neighbors : adjList) {
+            Collections.sort(neighbors);
+        }
     }
 
     // adding edges to graph
@@ -75,5 +81,10 @@ public class Graph {
     // chcecking whether graph is directed
     public boolean isDirected() {
         return directed;
+    }
+
+    // getter for adjacency list
+    public List<List<Integer>> getAdjacencyList() {
+        return adjList;
     }
 }
