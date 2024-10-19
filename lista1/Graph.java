@@ -59,7 +59,7 @@ public class Graph {
         }
     }
 
-    // adding edges to graph
+    // method for adding edges to graph
     private void addEdge(int e1, int e2) {
         adjList.get(e1).add(e2);
         if (!directed) {
@@ -67,7 +67,7 @@ public class Graph {
         }
     }
 
-    // printing the graph
+    // mwttod for printing the graph
     public void printGraph() {
         for (int i = 0; i < n; i++) {
             System.out.print("Vertex: " + (i + 1) + ": ");
@@ -78,12 +78,12 @@ public class Graph {
         }
     }
 
-    // chcecking whether graph is directed
+    // method for chcecking whether graph is directed
     public boolean isDirected() {
         return directed;
     }
 
-    // getter for adjacency list
+    // method for getting the adjacency list
     public List<List<Integer>> getAdjacencyList() {
         return adjList;
     }
