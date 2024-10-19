@@ -87,4 +87,9 @@ public class Graph {
     public List<List<Integer>> getAdjacencyList() {
         return adjList;
     }
+
+    // method for getting number of vertices
+    public int getVerticesNum() {
+        return n;
+    }
 }

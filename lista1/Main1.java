@@ -17,14 +17,18 @@ public class Main1 {
                 int startingVertex = graph.getAdjacencyList().get(0).get(0) - 1;
                 bfs.BFS(startingVertex);
                 bfs.printVisitedVertices();
-                bfs.printBFSTree();
+                if (args[2].equals("-t")) {
+                    bfs.printBFSTree();
+                }
             }
             else if (args[1].equals("DFS")) {
                 System.out.println("\nDFS");
                 DFS dfs = new DFS(graph);
                 dfs.DFS(graph.getAdjacencyList().get(0).get(0) - 1);
                 dfs.printVisitedVertices();
-                dfs.printBFSTree();
+                if (args[2].equals("-t")) {
+                    dfs.printDFSTree();
+                }
             }
             else {
                 System.err.println("Invalid search type: " + args[1]);
