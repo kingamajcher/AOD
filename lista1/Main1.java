@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
 
-public class Main {
+public class Main1 {
     public static void main(String[] args) {
         try {
             if (args.length < 2) {
@@ -10,8 +10,6 @@ public class Main {
             }
             String path = args[0];
             Graph graph = new Graph(path);
-            graph.printGraph();
-            System.out.println("Is the graph directed? " + (graph.isDirected() ? "Yes" : "No"));
 
             if (args[1].equals("BFS")) {
                 System.out.println("\nBFS");
