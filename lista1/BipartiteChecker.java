@@ -5,6 +5,7 @@ public class BipartiteChecker {
     private int[] color;
     private boolean isBipartite;
 
+    // constructor for bipartite checker
     public BipartiteChecker(Graph graph) {
         this.adjList = graph.getAdjacencyList();
     }

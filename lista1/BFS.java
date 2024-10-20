@@ -59,7 +59,7 @@ public class BFS {
         System.out.println();
     }
 
-    // method for printing the BST tree
+    // method for printing the BFS tree
     public void printBFSTree() {
         Map<Integer, List<Integer>> adjacencyList = new HashMap<>();
 

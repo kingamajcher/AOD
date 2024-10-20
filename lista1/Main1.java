@@ -5,7 +5,7 @@ public class Main1 {
     public static void main(String[] args) {
         try {
             if (args.length < 2) {
-                System.err.println("Usage: java Main <input-file> <search type>");
+                System.err.println("Usage: java Main1 <input-file> <search type> <parameters ( -t for tree)>");
                 System.exit(1);
             }
             String path = args[0];
@@ -17,7 +17,7 @@ public class Main1 {
                 int startingVertex = graph.getAdjacencyList().get(0).get(0) - 1;
                 bfs.BFS(startingVertex);
                 bfs.printVisitedVertices();
-                if (args[2].equals("-t")) {
+                if (args.length == 3 && args[2].equals("-t")) {
                     bfs.printBFSTree();
                 }
             }
@@ -26,7 +26,7 @@ public class Main1 {
                 DFS dfs = new DFS(graph);
                 dfs.DFS(graph.getAdjacencyList().get(0).get(0) - 1);
                 dfs.printVisitedVertices();
-                if (args[2].equals("-t")) {
+                if (args.length == 3 && args[2].equals("-t")) {
                     dfs.printDFSTree();
                 }
             }

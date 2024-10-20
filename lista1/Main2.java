@@ -4,7 +4,7 @@ public class Main2 {
     public static void main(String[] args) {
         try {
             if (args.length < 1) {
-                System.err.println("Usage: java Main <input-file>");
+                System.err.println("Usage: java Main2 <input-file>");
                 System.exit(1);
             }
             String path = args[0];

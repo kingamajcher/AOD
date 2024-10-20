@@ -8,6 +8,7 @@ public class Graph {
     private int m; // number of edges
     private List<List<Integer>> adjList; // adjacency list
 
+    // constructor for graph class
     public Graph(String filename) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(filename));
         String line = br.readLine();
@@ -67,7 +68,7 @@ public class Graph {
         }
     }
 
-    // mwttod for printing the graph
+    // method for printing the graph
     public void printGraph() {
         for (int i = 0; i < n; i++) {
             System.out.print("Vertex: " + (i + 1) + ": ");

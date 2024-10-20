@@ -50,8 +50,8 @@ public class DFS {
         System.out.println();
     }
 
-    // method for printing the BST tree
-    public void printBFSTree() {
+    // method for printing the DFS tree
+    public void printDFSTree() {
         Map<Integer, List<Integer>> adjacencyList = new HashMap<>();
 
         for (int[] edge : visitedTree) {
