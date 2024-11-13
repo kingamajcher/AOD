@@ -12,7 +12,10 @@ public class Main4 {
             Graph graph = new Graph(path);
 
             BipartiteChecker checker = new BipartiteChecker(graph);
-            if (checker.isBipartite()) {
+            long startTime = System.nanoTime();
+            boolean isBipartite = checker.isBipartite();
+            long endTime = System.nanoTime();
+            if (isBipartite) {
                 System.out.println("The graph is bipartite.");
                 if (graph.getVerticesNum() <= 200){
                     checker.printSubsets();
@@ -20,6 +23,8 @@ public class Main4 {
             } else {
                 System.out.println("The graph is not bipartite.");
             }
+
+            System.out.println("\nDuration: " + (endTime - startTime) + " ns");
 
         } catch (IOException e) {
             System.err.println("Error while trying to load file: " + e.getMessage());

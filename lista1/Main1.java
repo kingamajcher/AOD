@@ -15,20 +15,27 @@ public class Main1 {
                 System.out.println("\nBFS");
                 BFS bfs = new BFS(graph);
                 int startingVertex = graph.getAdjacencyList().get(0).get(0) - 1;
+                long startTime = System.nanoTime();
                 bfs.BFS(startingVertex);
+                long endTime = System.nanoTime();
                 bfs.printVisitedVertices();
                 if (args.length == 3 && args[2].equals("-t")) {
                     bfs.printBFSTree();
                 }
+                System.out.println("\nDuration: " + (endTime - startTime) + " ns");
             }
             else if (args[1].equals("DFS")) {
                 System.out.println("\nDFS");
                 DFS dfs = new DFS(graph);
-                dfs.DFS(graph.getAdjacencyList().get(0).get(0) - 1);
+                int startingVertex = graph.getAdjacencyList().get(0).get(0) - 1;
+                long startTime = System.nanoTime();
+                dfs.DFS(startingVertex);
+                long endTime = System.nanoTime();
                 dfs.printVisitedVertices();
                 if (args.length == 3 && args[2].equals("-t")) {
                     dfs.printDFSTree();
                 }
+                System.out.println("\nDuration: " + (endTime - startTime) + " ns");
             }
             else {
                 System.err.println("Invalid search type: " + args[1]);

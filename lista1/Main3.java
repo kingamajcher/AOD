@@ -11,7 +11,9 @@ public class Main3 {
             String path = args[0];
             Graph graph = new Graph(path);
 
+            long startTime = System.nanoTime();
             StronglyConnectedComponents sccFinder = new StronglyConnectedComponents(graph);
+            long endTime = System.nanoTime();
 
             int numSCCs = sccFinder.getNumberOfSCCs();
             List<Integer> sccSizes = sccFinder.getSizesOfSCCs();
@@ -22,6 +24,8 @@ public class Main3 {
             if (graph.getVerticesNum() <= 200) {
                 sccFinder.printSCCs();
             }
+
+            System.out.println("\nDuration: " + (endTime - startTime) + " ns");
 
         } catch (IOException e) {
             System.err.println("Error while trying to load file: " + e.getMessage());

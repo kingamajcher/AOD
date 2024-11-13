@@ -7,7 +7,20 @@ public class BipartiteChecker {
 
     // constructor for bipartite checker
     public BipartiteChecker(Graph graph) {
-        this.adjList = graph.getAdjacencyList();
+        List<List<Integer>> adjList = graph.getAdjacencyList();
+
+        // adding opposite edges in directed graph
+        if(graph.isDirected()) {
+            for (int u = 0; u < adjList.size(); u++) {
+                for (int v : adjList.get(u)) {
+                    if (!adjList.get(v).contains(u)) {  // Check if the reverse edge already exists
+                        adjList.get(v).add(u);  // Add reverse edge
+                    }
+                }
+            }
+        }
+
+        this.adjList = adjList;
     }
 
     // method to check if the graph is bipartite

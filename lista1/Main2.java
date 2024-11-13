@@ -10,8 +10,12 @@ public class Main2 {
             String path = args[0];
             Graph graph = new Graph(path);
 
+            long startTime = System.nanoTime();
             TopologicalSort ts = new TopologicalSort(graph);
+            long endTime = System.nanoTime();
             ts.printTopologicalOrder();
+
+            System.out.println("\nDuration: " + (endTime - startTime) + " ns");
 
         } catch (IOException e) {
             System.err.println("Error while trying to load file: " + e.getMessage());
