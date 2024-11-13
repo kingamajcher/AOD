@@ -1,0 +1,811 @@
+\documentclass{article}
+
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[polish]{babel}
+\usepackage{float}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{multirow}
+
+
+\title{\textbf{Algorytmy Optymalizacji Dyskretnej} \\[0.5cm] \large \textbf{Laboratorium} \\[0.5cm] \large \textbf{Lista 2}}
+\author{Kinga Majcher \\272354}
+\date{Listopad 2024}
+
+\begin{document}
+
+\maketitle
+
+\section{Zadanie 1}
+\subsection{Treść zadania}
+Przedsiębiorstwo lotnicze musi podjąć decyzję o zakupie paliwa do samolotów odrzutowych, mając do wyboru trzech dostawców. Samoloty tankują paliwo regularnie na czterech lotniskach, które obsługują.\\
+Firmy paliwowe poinformowały, że mogą dostarczyć następujące ilości paliwa w nadchodzącym miesiącu: Firma 1 – 275 000 galonów, Firma 2 – 550 000 galonów i Firma 3 – 660 000 galonów. Niezbędne ilości paliwa na poszczególnych lotniskach są odpowiednio równe: na lotnisku 1 – 110 000 galonów, na
+lotnisku 2 – 220 000 galonów, na lotnisku 3 – 330 000 galonów i na lotnisku 4 – 440 000 galonów.
+Koszt jednego galonu paliwa w \$ (z uwzględnieniem kosztów transportu) dostarczonego przez poszczególnych dostawców na każde z lotnisk przedstawia poniższa tabela.
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\centering\arraybackslash}p{2cm}||>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2cm}|}
+        \hline
+        \textbf{ } & \textbf{Firma 1} & \textbf{Firma 2} & \textbf{Firma 3}\\
+        \hline
+        \hline
+        \textbf{Lotnisko 1} & 10 & 7 & 8 \\
+        \hline
+        \textbf{Lotnisko 2} & 10 & 11 & 14 \\
+        \hline
+        \textbf{Lotnisko 3} & 9 & 12 & 4 \\
+        \hline
+        \textbf{Lotnisko 4} & 11 & 13 & 9 \\
+        \hline
+    \end{tabular}
+    \label{tabela_koszty_galonu_paliwa1}
+\end{table}
+Wyznacz plan zakupu i dostaw paliwa na lotniska, który minimalizuje koszty. Następnie na jego podstawie odpowiedz na poniższe pytania.
+\begin{enumerate}[label=(\alph*)]
+    \item Jaki jest minimalny łączny koszt dostaw wymaganych ilości paliwa na wszystkie lotniska?
+    \item Czy wszystkie firmy dostarczają paliwo?
+    \item Czy możliwości dostaw paliwa przez firmy są wyczerpane?
+\end{enumerate}
+\subsection{Opis modelu}
+\begin{itemize}
+    \item $n$ - liczba firm paliwowych (dostawców)
+    \item $m$  - liczba lotnisk (odbiorców)
+    \item $d_j$ - zapotrzebowanie na paliwo na lotnisku $j$
+    \item $s_i$ - maksymalna ilość paliwa dostępna od dostawcy $i$
+    \item $c_{ij}$ - koszt dostarczenia galonu paliwa od dostawcy $i$ na lotnisko $j$
+\end{itemize}
+\subsection{Zmienne decyzyjne}
+Definiujemy zmienną decyzyjną $x_{ij}$, która reprezentuje ilość paliwa dostarczoną przez firmę $i$ na lotnisko $j$.
+\subsection{Ograniczenia}
+\begin{itemize}
+    \item Dostarczona ilość paliwa przez firmę $i$ na lotnisko $j$ musi być nieujemna: 
+    \[\forall_{i, j} \; x_{ij} \geq 0\]
+    \item Zapotrzebowanie lotnisk na paliwo musi być zaspokojone:
+    \[\forall_{j} \; \sum_{i=1}^m x_{ij} = d_j\]
+    \item Każdy dostawca ma ograniczoną ilość paliwa, którą może dostarczyć:
+    \[\forall_{i} \;\sum_{j=1}^n \leq s_i\]
+\end{itemize}
+\subsection{Funkcja celu}
+Chcemy zminimalizować koszt zakupu i dostarczenia paliwa. Funkcja celu:
+\[\text{min} \sum_{i=1}^n \sum_{j=1}^m c_{ij}x_{ij}\]gdzie $c_{ij}$ to koszt dostarczenia galonu paliwa przez dostawcę $i$ na lotnisko $j$, a $x_{ij}$ to ilość paliwa dostarczona przez dostawcę $i$ na lotnisko $j$.
+\subsection{Dane}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2cm}|}
+        \hline
+        $i$ & \textbf{Firma 1} & \textbf{Firma 2} & \textbf{Firma 3} \\
+        \hline
+        \hline
+        $s_i$ & 275 000 & 550 000 & 660 000 \\
+        \hline
+    \end{tabular}
+    \label{tabela_możliwości_firm}
+    \caption{Maksymalna ilość paliwa dostępna od firmy $i$}
+\end{table}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2cm}|}
+        \hline
+        $j$ & \textbf{Lotnisko 1} & \textbf{Lotnisko 2} & \textbf{Lotnisko 3} & \textbf{Lotnisko 4} \\
+        \hline
+        \hline
+        $d_j$ & 110 000 & 220 000 & 330 000 & 440 000\\
+        \hline
+    \end{tabular}
+    \label{tabela_zapotrzebowanie lotnisk}
+    \caption{Zapotrzebowanie na paliwo na lotnisku $j$}
+\end{table}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\centering\arraybackslash}p{2cm}||>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2cm}|}
+        \hline
+        $c_{ij}$ & \textbf{Firma 1} & \textbf{Firma 2} & \textbf{Firma 3} \\
+        \hline
+        \hline
+        \textbf{Lotnisko 1} & 10 & 7 & 8 \\
+        \hline
+        \textbf{Lotnisko 2} & 10 & 11 & 14 \\
+        \hline
+        \textbf{Lotnisko 3} & 9 & 12 & 4 \\
+        \hline
+        \textbf{Lotnisko 4} & 11 & 13 & 9 \\
+        \hline
+    \end{tabular}
+    \label{tabela_koszty_galonu paliwa}
+    \caption{Koszt dostarczenia galonu paliwa od dostawcy $i$ na lotnisko $j$}
+\end{table}
+\subsection{Rozwiązanie}
+Znalezione optymalne rozwiązanie:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\centering\arraybackslash}p{2cm}||>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2cm}|}
+        \hline
+        $x_{ij}$ & \textbf{Firma 1} & \textbf{Firma 2} & \textbf{Firma 3} \\
+        \hline
+        \hline
+        \textbf{Lotnisko 1} & 0 & 110 000 & 0 \\
+        \hline
+        \textbf{Lotnisko 2} & 165 000 & 55 000 & 0 \\
+        \hline
+        \textbf{Lotnisko 3} & 0 & 0 & 330 000 \\
+        \hline
+        \textbf{Lotnisko 4} & 110 000 & 0 & 330 000 \\
+        \hline
+    \end{tabular}
+    \label{tabela_wyniki1}
+    \caption{Optymalna liczba galonów paliwa dostarczana przez dostawcę $i$ na lotnisko $j$}
+\end{table}
+\begin{enumerate}[label=(\alph*)]
+    \item Jaki jest minimalny łączny koszt dostaw wymaganych ilości paliwa na wszystkie lotniska?\\[0.2 cm]
+    Minimalny łączny koszt dostaw wymaganych ilości paliwa na wszystkie lotniska wynosi 8 525 000 \$.
+    \item Czy wszystkie firmy dostarczają paliwo?\\[0.2 cm]
+    Tak, wszystkie firmy dostarczają paliwo, każda z nich na dwa lotniska.
+    \item Czy możliwości dostaw paliwa przez firmy są wyczerpane?\\[0.2 cm]
+    Możliwości dostaw paliwa przez firmy są wyczerpane dla Firmy 1 oraz Firmy 3.
+\end{enumerate}
+
+\section{Zadanie 2}
+\subsection{Treść zadania}
+Zakład może produkować cztery różne wyroby $P_i, i \in \{1, 2, 3, 4\}$, w różnych kombinacjach. Każdy z wyrobów wymaga pewnego czasu obróbki na każdej z trzech maszyn. Czasy te są podane w poniższej tabeli (w minutach na kilogram wyrobu). Każda z maszyn jest dostępna przez 60 godzin w tygodniu. Produkty $P_1, P_2, P_3$ i $P_4$ mogą byą sprzedane po cenie, odpowiednio, 9, 7, 6 i 5 \$ za kilogram. Koszty zmienne (koszty pracy maszyn) wynoszą, odpowiednio, 2 \$ za godzinę dla maszyn $M_1$ i $M_2$ oraz 3 \$ za godzinę dla maszyny $M_3$. Koszty materiałowe wynoszą 4 \$ na każdy kilogram wyrobu $P_1$ i 1 \$ na każdy kilogram wyrobu $P_2, P_3$ i $P_4$. W tabeli podany jest także maksymalny tygodniowy popyt na każdy
+z wyrobów (w kilogramach).
+\begin{table}[H]
+\centering
+\begin{tabular}{l|c|c|c|c}
+    \toprule
+    \textbf{Produkt} & \multicolumn{3}{c}{\textbf{Maszyna}} & \textbf{Maksymalny popyt} \\
+    & $M_1$ & $M_2$ & $M_3$ & \textbf{tygodniowy} \\
+    \midrule
+    $P_1$ & 5 & 10 & 6 & 400 \\
+    $P_2$ & 3 & 6 & 4 & 100 \\
+    $P_3$ & 4 & 5 & 3 & 150 \\
+    $P_4$ & 4 & 2 & 1 & 500 \\
+    \bottomrule
+\end{tabular}
+\end{table}
+Wyznacz optymalny tygodniowy plan produkcji poszczególnych wyrobów i oblicz zysk z ich sprzedaży.
+\subsection{Opis modelu}
+\begin{itemize}
+    \item $m$ - liczba wyrobów, które może produkować zakład
+    \item $n$ - liczba maszyn
+    \item $p_i$ - cena po jakiej może być sprzedany kilogram wyrobu $P_i$
+    \item $m_i$ - wartość kosztów materiałowych na kilogram wyrobu $P_i$
+    \item $d_i$ - maksymalny popyt na wyrób $P_i$ (w kilogramach)
+    \item $a_j$ - tygodniowy dostępny czas pracy dla maszyny $M_j$ w godzinach
+    \item $c_j$ - wartość kosztów zmiennych dla maszyny $M_j$ za minutę
+    \item $t_{ij}$ - czas obróbki wyrobu $P_i$ na maszynie $M_j$ (w minutach na kilogram wyrobu)
+\end{itemize}
+\subsection{Zmienne decyzyjne}
+Definiujemy zmienną decyzyjną $x_i$, która reprezentuje liczbę kilogramów produktu $P_i$, która należy wyprodukować.
+\subsection{Ograniczenia}
+\begin{itemize}
+\item Wyprodukowana ilość wyrobu $P_i$ musi być nieujemna: 
+    \[\forall_{i} \; x_{i} \geq 0\]
+    \item Każda z maszyn $M_j$ ma ograniczony tygodniowy czas pracy $a_j$:
+    \[\forall_{j} \; \sum_{i=1}^n t_{ij}\cdot x_i \leq a_j\]
+    \item Na każdy z produktów $P_i$ jest ograniczony popyt:
+    \[\forall_{i} \; x_i \leq d_i\]
+\end{itemize}
+\subsection{Funkcja celu}
+Chcemy zmaksymalizować zysk, czyli różnicę między przychodem ze sprzedaży produktów, a kosztami ich wyprodukowania. Funkcja celu:
+\[\text{max} \left( \sum_{i=1}^m (p_i - m_i)x_i - \sum_{j=1}^n c_j\cdot\sum_{i=1}^m t_{ij}\cdot x_i\right)\]
+\subsection{Dane}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{3cm}|>{\centering\arraybackslash}p{3cm}|>{\centering\arraybackslash}p{3cm}|}
+        \hline
+        \textbf{Wyrób} & \textbf{Cena za kg (w \$)} & \textbf{Wartość kosztów materiałowych (w \$)} & \textbf{Popyt tygodniowy (w kg)} \\
+        $i$ & $p_i$ & $m_i$ & $d_i$ \\
+        \hline
+        \hline
+        $P_1$ & 9 & 4 & 400 \\
+        \hline
+        $P_2$ & 7 & 1 & 100 \\
+        \hline
+        $P_3$ & 6 & 1 & 150 \\
+        \hline
+        $P_4$ & 5 & 1 & 500 \\
+        \hline
+    \end{tabular}
+    \label{tabela_wyrób_dane}
+    \caption{Dane dotyczące wyrobów $P_i$}
+\end{table}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{3cm}|>{\centering\arraybackslash}p{3cm}|>{\centering\arraybackslash}p{3cm}|}
+        \hline
+        $t_{ij}$ & \textbf{Maszyna 1} & \textbf{Maszyna 2} & \textbf{Maszyna 3} \\
+        \hline
+        \hline
+        $P_1$ & 5 & 10 & 6 \\
+        \hline
+        $P_2$ & 3 & 6 & 4 \\
+        \hline
+        $P_3$ & 4 & 5 & 3 \\
+        \hline
+        $P_4$ & 4 & 2 & 1 \\
+        \hline
+    \end{tabular}
+    \label{tabela_wyrób_czas_na_maszynie}
+    \caption{Czas obróbki wyrobu $P_i$ na każdej z maszyn $M_j$ (w minutach)}
+\end{table}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{3cm}|>{\centering\arraybackslash}p{3cm}|}
+        \hline
+        \textbf{Maszyna} & \textbf{Dostępność w tygodniu (w minutach)} & \textbf{Koszt pracy (w \$ na h)} \\
+        $i$ & $a_j$ & $c_j$ \\
+        \hline
+        \hline
+        $M_1$ & 3600 & 2 \\
+        \hline
+        $M_2$ & 3600 & 2 \\
+        \hline
+        $M_3$ & 3600 & 3 \\
+        \hline
+    \end{tabular}
+    \label{tabela_maszyna_dane}
+    \caption{Dane dotyczące maszyn $M_j$}
+\end{table}
+\subsection{Rozwiązanie}
+Znalezione optymalne rozwiązanie:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2cm}|}
+        \hline
+         & \textbf{Wyrób 1} & \textbf{Wyrób 2} & \textbf{Wyrób 3} & \textbf{Wyrób 4} \\
+        \hline
+        \hline
+        $x_i$ & 125 & 100 & 150 & 500 \\
+        \hline
+    \end{tabular}
+    \label{tabela_wyniki2}
+    \caption{Optymalna liczba kilogramów wyrobu $P_i$, którą należy wyprodukować dla osiągnięcia największego zysku}
+\end{table}
+\noindent Maksymalny zysk wynosi 3632.50 \$.
+\section{Zadanie 3}
+\subsection{Treść zadania}
+W trybie normalnej produkcji pewna firma wytwarza maksymalnie 100 jednostek towaru w każdym z $K$ następujących po sobie okresów, gdzie koszt produkcji jednej jednostki towaru w okresie $j \in \{1, \dots, K\}$ wynosi $c_j$ \$. Firma może również uruchomić produkcję ponadwymiarową w wielkości do $a_j$ dodatkowych jednostek towaru w okresie $j$ przy koszcie jednostkowym $o_j$ \$. Zapotrzebowanie na towar w okresie $j$ wynosi $d_j$ jednostek. Dane dla $K = 4$ kolejnych okresów przedstawia poniższa tabela.
+\begin{table}[H]
+    \centering
+    \begin{tabular}{>{\centering\arraybackslash}p{0.5cm}||>{\centering\arraybackslash}p{1cm}>{\centering\arraybackslash}p{1cm}>{\centering\arraybackslash}p{1cm}>{\centering\arraybackslash}p{1cm}}
+        \hline
+        $j$ & $c_j$ & $a_j$ & $o_j$ & $d_j$ \\
+        \hline
+        \hline
+        1 & 6 000 & 60 & 8 000 & 130 \\
+        2 & 4 000 & 65 & 6 000 & 80 \\
+        3 & 8 000 & 70 & 10 000 & 125 \\
+        4 & 9 000 & 60 & 11 000 & 195 \\
+        \hline
+    \end{tabular}
+\end{table}
+\noindent Ponadto firma może przechować w magazynie do 70 jednostek towaru z jednego okresu na kolejny po koszcie 1 500 \$ za każdą magazynowaną jednostkę przez jeden okres. Początkowo w magazynie znajduje się 15 jednostek towaru.\\[0.3 cm]
+Wyznacz plan produkcji i magazynowania wytwarzanego towaru, który spełnia zapotrzebowania w każdym okresie i minimalizuje łączny koszt. Następnie na jego podstawie odpowiedz na poniższe pytania.
+\begin{enumerate}[label=(\alph*)]
+    \item Jaki jest minimalny łączny koszt produkcji i magazynowania towaru?
+    \item W których okresach firma musi zaplanować produkcję ponadwymiarową?
+    \item W których okresach możliwości magazynowania towaru są wyczerpane?
+\end{enumerate}
+\subsection{Opis modelu}
+\begin{itemize}
+    \item $K$: liczba okresów
+    \item $c_j$: koszt produkcji w trybie podstawowym w okresie $j$
+    \item $o_j$: koszt produkcji w trybie dodatkowym w okresie $j$
+    \item $k$: koszt magazynowania towaru przez jeden okres
+    \item $b_j$: maksymalna produkcja w trybie podstawowym w okresie $j$
+    \item $a_j$: maksymalna produkcja w trybie dodatkowym w okresie $j$
+    \item $d_j$: zapotrzebowanie w okresie $j$
+    \item $s_0$: początkowy stan magazynu
+    \item $S$: maksymalna pojemność magazynu
+\end{itemize}
+\subsection{Zmienne decyzyjne}
+Definiujemy następujące zmienne decyzyjne:
+\begin{itemize}
+    \item $x_j$: liczba jednostek wyprodukowanych w okresie $j$ w trybie podstawowym
+    \item $y_j$: liczba jednostek wyprodukowanych w okresie $j$ w trybie dodatkowym
+    \item $s_j$: liczba jednostek towaru przechowywanych w magazynie na koniec okresu $j$
+\end{itemize}
+\subsection{Ograniczenia}
+\begin{itemize}
+    \item Liczba jednostek wyprodukowanych w okresie $j$ w trybie podstawowym musi być nieujemna:
+    \[\forall_{j} \; x_j \geq 0\]
+    \item Liczba jednostek wyprodukowanych w okresie $j$ w trybie dodatkowym musi być nieujemna:
+    \[\forall_{j} \; y_j \geq 0\]
+    \item Liczba jednostek towaru przechowywanych w magazynie na koniec okresu $j$ musi być nieujemna:
+    \[\forall_{j} \; s_j \geq 0\]
+    \item Liczba jednostek wyprodukowanych w okresie $j$ musi być mniejsza niż maksymalna możliwa produkcja w trybie podstawowym:
+    \[\forall_{j} \; x_j \geq b_j\]
+    \item Liczba jednostek wyprodukowanych w okresie $j$ musi być mniejsza niż maksymalna możliwa produkcja w trybie dodatkowym:
+    \[\forall_{j} \; y_j \geq a_j\]
+    \item Liczba jednostek przechowywanych w magazynie na koniec okresu musi być nie większa niż jego pojemność:
+    \[\forall_{j} \; s_j \leq S\]
+    \item Do magazynu na okres $j+1$ można oddać tylko tyle jednostek ile zostało po całkowitym zaspokojeniu zapotrzebowania w okresie $j$:
+    \[\forall_{j} \; s_{j+1} = x_j + y_j + s_j - d_j\]
+    \item Nie ma sensu magazynowania jakichkolwiek jednostek na koniec ostatniego okresu, gdyż jest to płatne:
+    \[s_{K+1} = 0\]
+    \item W pierwszym okresie stan magazynu jest taki jak stan początkowy, bo do magazynu można odkładać dopiero na końcu okresu:
+    \[s_1 = s_0\]
+\end{itemize}
+\subsection{Funkcja celu}
+Chcemy zminimalizować łączne koszty produkcji i magazynowania jednostek:
+\[\text{min} \sum_{j=1}^K (c_jx_j + o_jy_j + ks_j)\]
+\subsection{Dane}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\centering\arraybackslash}p{0.5cm}|>{\centering\arraybackslash}p{2.5cm}|>{\centering\arraybackslash}p{2.5cm}|>{\centering\arraybackslash}p{2.5cm}|>{\centering\arraybackslash}p{2.5cm}|>{\centering\arraybackslash}p{2.5cm}|}
+        \hline
+        \textbf{ } & \textbf{maksymalna produkcja podstawowa} & \textbf{koszt produkcji podstawowej} & \textbf{maksymalna produkcja dodatkowa} & \textbf{koszt produkcji dodatkowej} & \textbf{zapotrzebo-wanie} \\
+        $j$ & $c_j$ & $b_j$ & $a_j$ & $o_j$ & $d_j$ \\
+        \hline
+        \hline
+        1 & 100 & 6 000 & 60 & 8 000 & 130 \\
+        \hline
+        2 & 100 & 4 000 & 65 & 6 000 & 80 \\
+        \hline
+        3 & 100 & 8 000 & 70 & 10 000 & 125 \\
+        \hline
+        4 & 100 & 9 000 & 60 & 11 000 & 195 \\
+        \hline
+    \end{tabular}
+\end{table}
+\[S = 70 \text{ - pojemność magazynu}\]
+\[s_0 = 15 \text{ - stan magazynu na początku pierwszego okresu}\]
+\[k = 1500 \text{ - koszt magazynowania jednostki towaru przez jeden okres}\]
+\subsection{Rozwiązanie}
+Znalezione optymalne rozwiązanie:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{3cm}|>{\centering\arraybackslash}p{3cm}|>{\centering\arraybackslash}p{3cm}|}
+        \hline
+        \textbf{Okres} & \textbf{Wyprodukowane jednostki w trybie podstawowym} & \textbf{Wyprodukowane jednostki w trybie dodatkowym} & \textbf{Stan magazynu na początku okresu} \\
+        \hline
+        \hline
+        1 & 100 & 15 & 15 \\
+        \hline
+        2 & 100 & 50 & 0 \\
+        \hline
+        3 & 100 & 0 & 70 \\
+        \hline
+        4 & 100 & 50 & 45 \\
+        \hline
+    \end{tabular}
+    \label{tabela_wyniki3}
+    \caption{Optymalne wielkości produkcji i stany magazynu}
+\end{table}
+\begin{enumerate}[label=(\alph*)]
+    \item Jaki jest minimalny łączny koszt produkcji i magazynowania towaru?\\[0.2cm]
+    Minimalny łączny koszt produkcji i magazynowania towaru wynosi 3 865 000 \$.
+    \item W których okresach firma musi zaplanować produkcję ponadwymiarową?\\[0.2cm]
+    Firma musi zaplanować produkcję ponadwymiarową w okresach 1, 2 oraz 4.
+    \item W których okresach możliwości magazynowania towaru są wyczerpane?\\[0.2cm]
+    Możliwości magazynowania towaru są wyczerpane w okresie 3.
+\end{enumerate}
+
+\section{Zadanie 4}
+\subsection{Treść zadania}
+Dana jest sieć połączeń między miastami reprezentowana za pomocą skierowanego grafu $G = (N, A)$, gdzie $N$ jest zbiorem miast (wierzchołków), a $A$ jest zbiorem połączeń między miastami (łuków). Dla każdego połączenia z miasta $i$ do miasta $j, (i, j) \in A$, dane są koszt przejazdu $c_{ij}$ oraz czas przejazdu $t_{ij}$. Dane są również dwa miasta $i^\circ, j^\circ \in N$.\\
+Celem jest znalezienie połączenia (ścieżki) od miasta $i^\circ$ do miasta $j^\circ$, którego całkowity koszt jest najmniejszy i całkowity czas przejazdu nie przekracza z góry zadanego czasu $T$.\\
+\begin{enumerate}[label=(\alph*)]
+    \item Rozwiąż poniższy egzemplarz problemu (wygenerowany we współpracy z Microsoft Copilot :) ).\\
+$N = {1, \dots, 10}, i^\circ = 1, j^\circ = 10, T = 15$. Kolejne krawędzie podane są w postaci $(i, j, c_{ij}, t_{ij})$:\\
+$(1, 2, 3, 4), (1, 3, 4, 9), (1, 4, 7, 10), (1, 5, 8, 12), (2, 3, 2, 3), (3, 4, 4, 6), (3, 5, 2, 2)$,\\
+$(3, 10, 6, 11), (4, 5, 1, 1), (4, 7, 3, 5), (5, 6, 5, 6), (5, 7, 3, 3), (5, 10, 5, 8), (6, 1, 5, 8)$,\\ 
+$(6, 7, 2, 2), (6, 10, 7, 11), (7, 3, 4, 6), (7, 8, 3, 5), (7, 9, 1, 1), (8, 9, 1, 2), (9, 10, 2, 2)$.
+\item Zaproponuj własny egzemplarz problemu i rozwiąż go. Graf ma mieć co najmniej $n \geq 10$ wierzchołków, najtańsza ścieżka spełniająca ograniczenia na czas przejazdu ma mieć $ \geq 3$ krawędzie i mieć większy koszt niż najtańsza ścieżka w wersji bez ograniczeń (ta ma mieć $ \geq 2$ krawędzie).
+\item Czy ograniczenie na całkowitoliczbowość zmiennych decyzyjnych jest potrzebne? Jeśli nie, to uzasadnij dlaczego. Jeśli tak, to zaproponuj kontrprzykład, w którym po usunięciu ograniczeń na całkowitoliczbowość (tj. mamy przypadek, w którym model jest modelem programowania liniowego) zmienne decyzyjne w rozwiązaniu optymalnym nie mają wartości całkowitych.
+\item Czy po usunięciu ograniczenia na czasy przejazdu w modelu bez ograniczeń na całkowitoliczbowość zmiennych decyzyjnych i rozwiązaniu problemu otrzymane połączenie zawsze jest akceptowalnym rozwiązaniem? Uzasadnij odpowiedź.
+\end{enumerate}
+\subsection{Opis modelu}
+\begin{itemize}
+    \item $N$: zbiór miast
+    \item $A$: zbiór połączeń między miastami
+    \item $c_{ij}$: koszt przejazdu między miastami $i$ i $j$
+    \item $t_{ij}$: czas przejazdu między miastami $i$ i $j$
+    \item $T$: maksymalny dopuszczalny czas przejazdu
+    \item $i^\circ$: miasto początkowe
+    \item $j^\circ$: miasto końcowe
+\end{itemize}
+\subsection{Zmienne decyzyjne}
+Definiujemy zmienną decyzyjną $x_{ij}$, która przyjmuje wartość 1, jeśli krawędź $(i, j, c_{ij}, t_{ij})$ należy do optymalnej ścieżki, a 0 w przeciwnym przypadku.
+\subsection{Ograniczenia}
+\begin{itemize}
+    \item Jeśli nie istnieje połączenie między $i$ i $j$, to wartość $x_{ij}$ jest ustalona i wynosi 0:
+    \[\forall_{(i, j) \notin A} \; x_{ij} = 0\]
+    \item Z miasta początkowego $i^\circ$ wychodzi dokładnie jedno połączenie, ścieżka zaczyna się w nim i nie ma rozgałęzień:
+    \[\sum_{j: (i^\circ, j) \in A} x_{i^\circ j} = 1\]
+    \[\sum_{j: (j, i^\circ) \in A} x_{ji^\circ} = 0\]
+    \item Do miasta docelowego $j^\circ$ dochodzi dokładnie jedno połączenie, ścieżka kończy się w nim i nie ma rozgałęzień:
+    \[\sum_{i: (i, j^\circ)\in A} x_{ij^\circ} = 1\]
+    \[\sum_{j: (j^\circ, i) \in A} x_{j^\circ i} = 0\]
+    \item Każde miasto poza $i^\circ$ i $j^\circ$ ma tyle samo połączeń wchodzących co wychodzących:
+    \[\forall_{k \in N \setminus \{i^\circ, j^\circ\}} \sum_{j:(k, j) \in A} x_{kj} = \sum_{i: (i, k) \in A} x_{ik}\]
+    \item Całkowity czas przejazdu nie może być większy niż $T$:
+    \[\sum_{(i, j) \in A} t_{ij}x_{ij} \leq T\]
+\end{itemize}
+\subsection{Funkcja celu}
+Chcemy zminimalizować całkowity koszt przejazdu:
+\[\text{min} \sum_{(i, j) \in A} c_{ij}x_{ij}\]
+\subsection{Dane}
+\begin{enumerate}[label=(\alph*)]
+    \item 
+    \begin{tabular}{|c||c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+        \hline
+         $i$ & 1 & 1 & 1 & 1 & 2 & 3 & 3 & 3 & 4 & 4 & 5 & 5 & 5 & 6 & 6 & 6 & 7 & 7 & 7 & 8 & 9 \\
+        \hline
+         $j$ & 2 & 3 & 4 & 5 & 3 & 4 & 5 & 10 & 5 & 7 & 6 & 7 & 10 & 1 & 7 & 10 & 3 & 8 & 9 & 9 & 10 \\
+        \hline
+         $c_{ij}$ & 3 & 4 & 7 & 8 & 2 & 4 & 2 & 6 & 1 & 3 & 5 & 3 & 5 & 5 & 2 & 7 & 4 & 3 & 1 & 1 & 2 \\
+        \hline
+         $t_{ij}$ & 4 & 9 & 10 & 12 & 3 & 6 & 2 & 11 & 1 & 5 & 6 & 3 & 8 & 8 & 2 & 11 & 6 & 5 & 1 & 2 & 2 \\
+        \hline
+    \end{tabular}
+    \[N = \{1, 2, \dots, 10\}\]
+    \[i^\circ = 1\]
+    \[j^\circ = 10\]
+    \[T = 15\]
+    \item
+    \begin{tabular}{|c||c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+        \hline
+         $i$ & 1 & 1 & 1 & 1 & 2 & 2 & 3 & 3 & 4 & 4 & 5 & 6 & 7 & 7 & 8 & 9 \\
+        \hline
+         $j$ & 2 & 3 & 4 & 7 & 5 & 6 & 5 & 6 & 6 & 7 & 8 & 9 & 9 & 10 & 10 & 10 \\
+        \hline
+         $c_{ij}$ & 3 & 5 & 8 & 2 & 2 & 4 & 3 & 4 & 1 & 2 & 3 & 6 & 7 & 1 & 5 & 2 \\
+        \hline
+         $t_{ij}$ & 4 & 6 & 7 & 10 & 3 & 6 & 2 & 4 & 2 & 5 & 3 & 5 & 3 & 10 & 6 & 3 \\
+        \hline
+    \end{tabular}
+    \[N = \{1, 2, \dots, 10\}\]
+    \[i^\circ = 1\]
+    \[j^\circ = 10\]
+    \[T = 18\]
+\end{enumerate}
+\subsection{Rozwiązanie}
+\begin{enumerate}[label=(\alph*)]
+    \item Wykorzystane krawędzie:
+        \begin{table}[H]
+            \centering
+            \begin{tabular}{|c|c|c|c|}
+                \hline
+                $i$ & $j$ & $c_{ij}$ & $t_{ij}$ \\
+                \hline
+                \hline
+                1 & 2 & 3 & 4 \\
+                \hline
+                2 & 3 & 2 & 3 \\
+                \hline
+                3 & 5 & 2 & 2 \\
+                \hline
+                5 & 7 & 1 & 1 \\
+                \hline
+                7 & 9 & 1 & 1 \\
+                \hline
+                9 & 10 & 2 & 2 \\
+                \hline
+            \end{tabular}
+            \label{tabela_wyniki4.1}
+        \end{table}
+        \[\text{Czas} = 15\]
+        \[\text{Koszt} = 13\]
+    
+    \item Wykorzystane krawędzie:
+        \begin{table}[H]
+            \centering
+            \begin{tabular}{|c|c|c|c|}
+                \hline
+                $i$ & $j$ & $c_{ij}$ & $t_{ij}$ \\
+                \hline
+                \hline
+                1 & 7 & 2 & 10 \\
+                \hline
+                7 & 9 & 7 & 3 \\
+                \hline
+                9 & 10 & 2 & 3 \\
+                \hline
+            \end{tabular}
+            \label{tabela_wyniki4.2}
+        \end{table}
+        \[\text{Czas} = 16\]
+        \[\text{Koszt} = 11\]
+    \item Czy ograniczenie na całkowitoliczbowość zmiennych decyzyjnych jest potrzebne? Jeśli nie, to uzasadnij dlaczego. Jeśli tak, to zaproponuj kontrprzykład, w którym po usunięciu ograniczeń na całkowitoliczbowość (tj. mamy przypadek, w którym model jest modelem programowania liniowego) zmienne decyzyjne w rozwiązaniu optymalnym nie mają wartości całkowitych.\\[0.2 cm]
+    Tak, ograniczenie na całkowitoliczbowość jest potrzebne. Weźmy model z tego zadania i dane:
+        \begin{table}[H]
+                \centering
+                \begin{tabular}{|c||c|c|c|}
+                    \hline
+                     $i$ & 1 & 2 & 1 \\
+                    \hline
+                     $j$ & 2 & 3 & 3 \\
+                    \hline
+                     $c_{ij}$ & 10 & 7 & 1 \\
+                    \hline
+                     $t_{ij}$ & 2 & 4 & 12 \\
+                    \hline
+                \end{tabular}
+            \end{table}
+        \[N = \{1, 2, 3\}\]
+        \[i^\circ = 1\]
+        \[j^\circ = 3\]
+        \[T = 10\]
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.45\textwidth]{graph.png}
+            \label{fig:graph5}
+        \end{figure}
+        Wówczas dla zmiennej $x_{ij}$ z ograniczeniem na całkowitoliczbowość, model znalazł rozwiązanie:
+        \[x_{12} = 1\]
+        \[x_{13} = 0\]
+        \[x_{23} = 1\]
+        \[\text{Koszt} = 17\]
+        Dla zmiennej $x_{ij}$ bez ograniczenia na całkowitoliczbowość, model znalazł rozwiązanie:
+        \[x_{12} = \frac{1}{3}\]
+        \[x_{13} = \frac{2}{3}\]
+        \[x_{23} = \frac{1}{3}\]
+        \[\text{Koszt} = 6\frac{1}{3}\]
+        Jak widać, znaleziona ścieżka faktycznie ma mniejszy koszt, ale nie może być zaakceptowana, gdyż posiada ona rozgałęzienia, co nie ma sensu w kontekście tego problemu.
+    \item Czy po usunięciu ograniczenia na czasy przejazdu w modelu bez ograniczeń na całkowitoliczbowość zmiennych decyzyjnych i rozwiązaniu problemu otrzymane połączenie zawsze jest akceptowalnym rozwiązaniem? Uzasadnij odpowiedź.\\[0.2 cm]
+    Po usunięciu ograniczeń na całkowitoliczbowość zmiennych decyzyjnych i czas przejazdu, problem można sprowadzić do znalezienia wszystkich ścieżek z wierzchołka $i^\circ$ do $j^\circ$ i wybraniu tej o najmniejszej sumie wag. Rozgałęzianie tych ścieżek nie ma sensu. Weźmy dowolne dwa wierzchołki $i, j$ i weźmy dla uproszczenia dwie jedyne ścieżki między nimi (dowód można uogólnić na dowolną ilość ścieżek), o sumarycznej wadze krawędzi odpowiednio $a$ i $b$. Skoro są to jedyne ścieżki między tymi wierzchołkami to $x_a + x_b = 1$. Bez utraty ogólności załóżmy, że $a \geq b$. Dla $a$ $x_a = f, \text{gdzie }f \in (0, 1]$, więc dla $b$ $x_b = (1 - f)$. Wówczas $x_a \cdot a + x_b \cdot b = f \cdot a + (1 - f) \cdot b = f \cdot a + b - f \cdot b = b + f \cdot (a - b)$. Wiemy, że $a \geq b$, więc wartość takiej rozgałęzionej ścieżki zawsze będzie większa bądź równa wartości ścieżki o najmniejszej wadze. Nie ma więc sensu rozgałęziać ścieżek w kwestii tego problemu. Jeśli nie ma ograniczenia maksymalnego czasu to model będzie zwracał sensowne rozwiązania nawet dla zmiennej decyzyjnej która nie ma ograniczenia całkowitoliczbowości.   
+\end{enumerate}
+
+\section{Zadanie 5}
+\subsection{Treść zadania}
+Policja w małym miasteczku ma w swoim zasięgu trzy dzielnice oznaczone jako $p_1, p_2$ i $p_3$. Każda dzielnica ma przypisaną pewną liczbę radiowozów. Policja pracuje w systemie trzyzmianowym. W tabelach 10 i 11 podane są minimalne i maksymalne liczby radiowozów dla każdej zmiany.
+\begin{table}[H]
+    \centering
+    \begin{tabular}{cccc}
+        \hline
+        \textbf{ } & \textbf{zmiana 1} & \textbf{zmiana 2} & \textbf{zmiana 3} \\
+        \hline
+        $p_1$ & 2 & 4 & 3 \\
+        \hline
+        $p_2$ & 3 & 6 & 5 \\
+        \hline
+        $p_3$ & 5 & 7 & 6 \\
+        \hline
+    \end{tabular}
+    \caption{Minimalne liczby radiowozów dla każdej zmiany i dzielnicy}
+\end{table}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{cccc}
+        \hline
+        \textbf{ } & \textbf{zmiana 1} & \textbf{zmiana 2} & \textbf{zmiana 3} \\
+        \hline
+        $p_1$ & 3 & 7 & 5 \\
+        \hline
+        $p_2$ & 5 & 7 & 10 \\
+        \hline
+        $p_3$ & 8 & 12 & 10 \\
+        \hline
+    \end{tabular}
+    \caption{Maksymalne liczby radiowozów dla każdej zmiany i dzielnicy}
+\end{table}
+Aktualne przepisy wymuszają, że dla zmiany 1, 2 i 3 powinno być dostępnych, odpowiednio, co najmniej 10, 20 i 18 radiowozów. Ponadto dzielnice $p_1, p_2$ i $p_3$ powinny mieć przypisane, odpowiednio, co
+najmniej 10, 14 i 13 radiowozów. Policja chce wyznaczyć przydział radiowozów spełniający powyższe wymagania i minimalizujący ich całkowitą liczbę. 
+\subsection{Opis modelu}
+\begin{itemize}
+    \item $n$: liczba zmian
+    \item $m$: liczba dzielnic
+    \item $rMIN_{ij}$: minimalna liczba radiowozów dla $i$-tej dzielnicy i $j$-tej zmiany
+    \item $rMAX_{ij}$: maksymalna liczba radiowozów dla $i$-tej dzielnicy i $j$-tej zmiany
+    \item $d_i$: minimalna liczba radiowozów dla $i$-tej dzielnicy
+    \item $z_j$: minimalna liczba radiowozów dla $j$-tej zmiany
+\end{itemize}
+\subsection{Zmienne decyzyjne}
+Definiujemy zmienną decyzyjną $x_{ij}$, która reprezentuje liczbę radiowozów przydzielonych do $i$-tej dzielnicy na $j$-tą zmianę.
+\subsection{Ograniczenia}
+\begin{itemize}
+    \item Liczba radiowozów przydzielonych do $i$-tej dzielnicy na $j$-tą zmianę musi być nieujemna:
+    \[\forall_{i, j} \; x_{ij} \geq 0\]
+    \item Dla każdej $j$-tej zmiany musi być dostępne więcej radiowozów niż minimalna liczba radiowozów dla tej zmiany:
+    \[\sum_{i = 1}^m x_{ij} \geq z_j\]
+    \item Dla każdej $i$-tej dzielnicy musi być dostępne więcej radiowozów niż minimalna liczba radiowozów dla tej dzielnicy:
+    \[\sum_{j = 1}^n x_{ij} \geq d_i\]
+    \item Dla każdej $i$-tej dzielnicy i $j$-tej zmiany dostępna liczba radiowozów nie może być mniejsza niż wymagana minimalna liczba i większa niż wymagana maksymalna liczba:
+    \[\forall_{i, j} \; rMIN_{ij} \geq x_{ij} \geq rMAX_{ij}\]
+\end{itemize}
+\subsection{Funkcja celu}
+Chcemy zminimalizować całkowitą liczbę potrzebnych radiowozów:
+\[\text{min} \sum_{i=1}^m \sum_{j=1}^n x_{ij}\]
+\subsection{Dane}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c||c|c|c|}
+        \hline
+        $rMIN_{ij}$ & \textbf{1} & \textbf{2} & \textbf{3} \\
+        \hline
+        \hline
+        \textbf{1} & 2 & 4 & 3 \\
+        \hline
+        \textbf{2} & 3 & 6 & 5 \\
+        \hline
+        \textbf{3} & 5 & 7 & 6 \\
+        \hline
+    \end{tabular}
+\end{table}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c||c|c|c|}
+        \hline
+        $rMAX_{ij}$ & \textbf{1} & \textbf{2} & \textbf{3} \\
+        \hline
+        \hline
+        \textbf{1} & 3 & 7 & 5 \\
+        \hline
+        \textbf{2} & 5 & 7 & 10 \\
+        \hline
+        \textbf{3} & 8 & 12 & 10 \\
+        \hline
+    \end{tabular}
+\end{table}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c||c|c|c|}
+        \hline
+        \textbf{ } & \textbf{1} & \textbf{2} & \textbf{3} \\
+        \hline
+        \hline
+        $d_i$ & 10 & 14 & 13 \\
+        \hline
+    \end{tabular}
+\end{table}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c||c|c|c|}
+        \hline
+        \textbf{ } & \textbf{1} & \textbf{2} & \textbf{3} \\
+        \hline
+        \hline
+        $z_j$ & 10 & 20 & 18 \\
+        \hline
+    \end{tabular}
+\end{table}
+\[n = 3\]
+\[m = 3\]
+
+\subsection{Rozwiązanie}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c||c|c|c|}
+        \hline
+        $x_{ij}$ & \textbf{1} & \textbf{2} & \textbf{3} \\
+        \hline
+        \hline
+        \textbf{1} & 2 & 5 & 5 \\
+        \hline
+        \textbf{2} & 3 & 7 & 5 \\
+        \hline
+        \textbf{3} & 5 & 8 & 8 \\
+        \hline
+    \end{tabular}
+    \label{tabela_wyniki5}
+    \caption{Optymalne liczby radiowozów dla dzielnic $i$ oraz zmian $j$}
+\end{table}
+Minimalna liczba radiowozów to 48.
+\section{Zadanie 6}
+\subsection{Treść zadania}
+Firma przeładunkowa składuje na swoim terenie kontenery z cennym ładunkiem. Teren podzielony jest na $m \times n$ kwadratów. Kontenery składowane są w wybranych kwadratach. Jeden kwadrat może być zajmowany przez co najwyżej jeden kontener. Firma musi rozmieścić kamery, żeby monitorować kontenery. Każda kamera może obserwować $k$ kwadratów na lewo, $k$ kwadratów na prawo, $k$ kwadratów w górę i $k$ kwadratów w dół. Kamera nie może być umieszczona w kwadracie zajmowanym przez kontener.\\
+Zaplanuj rozmieszczenie kamer w kwadratach tak, aby każdy kontener był monitorowany przez co najmniej jedną kamerę oraz liczba użytych kamer była jak najmniejsza.\\
+Rozwiąż własny egzemplarz powyższego problemu z parametrami $m, n \geq 5$. Podaj rozwiązania dla co najmniej dwóch różnych wartości parametru $k$.
+\subsection{Opis modelu}
+\begin{itemize}
+    \item $C_{ij}$ - macierz $m \times n$ reprezentująca pozycje kontenerów. Jeśli w kwadracie $(i, j)$ znajduje się kontener to $C_{ij} = 1$, w przeciwnym przypadku $c_{ij} = 0$.
+    \item $m$: liczba wierszy terenu
+    \item $n$: liczba kolumn terenu
+    \item $k$: zasięg obserwacji kamery w każdą stronę
+\end{itemize}
+\subsection{Zmienne decyzyjne}
+Definiujemy zmienną decyzyjną $x_{ij}$, która przyjmuje wartość 1, jeśli w kwadracie $(i, j)$ znajduje się kamera, w przeciwnym przypadku przyjmuje wartość 0.
+\subsection{Ograniczenia}
+\begin{itemize}
+    \item Kamery mogą być umieszczane jedynie w pustych kwadratach:
+    \[\forall_{(i, j): C_{ij} = 1} \; x_{ij} = 0\]
+    \item Każdy kwadrat z kontenerem musi być monitorowany przez co najmniej jedną kamerę w jej zasięgu:
+    \[\forall_{(i, j): C_{ij} = 1} \; \sum_{a = max(1, i - k)}^{min(i + k, m)} x_{aj} + \sum_{b = max(1, j - k)}^{min(j + k, n)} x_{ib} \geq 1\]
+\end{itemize}
+\subsection{Funkcja celu}
+Chcemy zminimalizować liczbę kamer:
+\[\text{min} \sum_{i = 1}^m \sum_{j = 1}^n x_{ij}\]
+\subsection{Dane}
+\begin{enumerate}[label=(\alph*)]
+    \item $k = 2$
+        \begin{table}[H]
+            \centering
+            \begin{tabular}{|c|c|c|c|c|c|c|}
+                \hline
+                0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+                \hline
+                0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+                \hline
+                1 & 0 & 0 & 0 & 1 & 0 & 0 \\
+                \hline
+                1 & 0 & 0 & 0 & 0 & 0 & 1 \\
+                \hline
+                1 & 0 & 0 & 1 & 0 & 0 & 0 \\
+                \hline
+                0 & 0 & 1 & 0 & 0 & 0 & 1 \\
+                \hline
+                1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+                \hline
+            \end{tabular}
+            \caption{Rozmieszczenie kontenerów w terenie}
+        \end{table}
+        \textbf{ }
+    \item $k = 4$
+        \begin{table}[H]
+            \centering
+            \begin{tabular}{|c|c|c|c|c|c|c|}
+                \hline
+                0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+                \hline
+                0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+                \hline
+                1 & 0 & 0 & 0 & 1 & 0 & 0 \\
+                \hline
+                1 & 0 & 0 & 0 & 0 & 0 & 1 \\
+                \hline
+                1 & 0 & 0 & 1 & 0 & 0 & 0 \\
+                \hline
+                0 & 0 & 1 & 0 & 0 & 0 & 1 \\
+                \hline
+                1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+                \hline
+            \end{tabular}
+            \caption{Rozmieszczenie kontenerów w terenie}
+        \end{table}
+\end{enumerate}
+\subsection{Rozwiązanie}
+\begin{enumerate}[label=(\alph*)]
+    \item $k = 2$\\
+    Minimalna liczba kamer: 5
+        \begin{table}[H]
+            \centering
+            \begin{tabular}{|c|c|c|c|c|c|c|}
+                \hline
+                0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+                \hline
+                0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+                \hline
+                1 & 0 & K & 0 & 1 & 0 & K \\
+                \hline
+                1 & 0 & 0 & 0 & 0 & 0 & 1 \\
+                \hline
+                1 & K & 0 & 1 & 0 & 0 & 0 \\
+                \hline
+                K & 0 & 1 & 0 & K & 0 & 1 \\
+                \hline
+                1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+                \hline
+            \end{tabular}
+            \caption{Rozmieszczenie kontenerów i kamer w terenie, kontenery oznaczono cyfrą 1, a kamery literą K}
+        \end{table}
+        \textbf{ }
+    \item $k = 4$\\
+    Minimalna liczba kamer: 3
+        \begin{table}[H]
+            \centering
+            \begin{tabular}{|c|c|c|c|c|c|c|}
+                \hline
+                0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+                \hline
+                0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+                \hline
+                1 & 0 & 0 & 0 & 1 & 0 & K \\
+                \hline
+                1 & 0 & 0 & 0 & 0 & 0 & 1 \\
+                \hline
+                1 & 0 & K & 1 & 0 & 0 & 0 \\
+                \hline
+                K & 0 & 1 & 0 & 0 & 0 & 1 \\
+                \hline
+                1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+                \hline
+            \end{tabular}
+            \caption{Rozmieszczenie kontenerów i kamer w terenie, kontenery oznaczono cyfrą 1, a kamery literą K}
+        \end{table}
+\end{enumerate}
+\end{document}
