@@ -2,11 +2,13 @@
 
 using JuMP
 using GLPK
-using Printf
 
 supply = [275000, 550000, 660000]
 demand = [110000, 220000, 330000, 440000]
-prices_matrix = [10 7 8; 10 11 14; 9 12 4; 11 13 9]
+prices_matrix = [10 7 8; 
+                 10 11 14; 
+                 9 12 4; 
+                 11 13 9]
 
 function solve_problem(supply::Vector, demand::Vector, prices_matrix::Matrix)
     model = Model(GLPK.Optimizer)
@@ -31,19 +33,14 @@ function solve_problem(supply::Vector, demand::Vector, prices_matrix::Matrix)
     if termination_status(model) == MOI.OPTIMAL
         minimal_cost = objective_value(model)
         println("Minimal cost: $minimal_cost\n")
-        rows, cols = size(fuel_amount_matrix)
         println("Optimal fuel amounts to transport:")
-        for i in 1:rows
-            for j in 1:cols
-                @printf("%-10s ", value(fuel_amount_matrix[i, j]))
-            end
-            println()
-        end
+        display(value.(fuel_amount_matrix))
     elseif termination_status(model) == MOI.INFEASIBLE
 		println("The model is infeasible.")
 		return nothing
     else
         println("No optimal solution found.")
+        return nothing
     end
 end
 

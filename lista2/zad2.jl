@@ -2,14 +2,16 @@
 
 using JuMP
 using GLPK
-using Printf
 
 prices = [9, 7, 6, 5]
 material_costs = [4, 1, 1, 1]
 demand = [400, 100, 150, 500]
 availibility = [60, 60, 60]
 machine_costs = [2, 2, 3]
-machine_time_matrix = [5 10 6; 3 6 4; 4 5 3; 4 2 1]
+machine_time_matrix = [5 10 6; 
+                       3 6 4; 
+                       4 5 3; 
+                       4 2 1]
 
 function solve_problem(prices::Vector, material_costs::Vector, demand::Vector, availibility::Vector, machine_costs::Vector, machine_time_matrix::Matrix)
     m, n = size(machine_time_matrix) # m - products, n - machines
@@ -36,17 +38,15 @@ function solve_problem(prices::Vector, material_costs::Vector, demand::Vector, a
     if termination_status(model) == MOI.OPTIMAL
         maximum_profit = objective_value(model)
         println("Maximum profit: $maximum_profit\n")
-        n = length(amount_produced)
         println("Optimal amounts to produce:")
-        for i in 1:n
-            @printf("%-10s ", value(amount_produced[i]))
-        end
+        display(value.(amount_produced))
         println()
     elseif termination_status(model) == MOI.INFEASIBLE
         println("The model is infeasible.")
         return nothing
     else
         println("No optimal solution found.")
+        return nothing
     end
 end
 
