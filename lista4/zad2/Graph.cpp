@@ -1,3 +1,5 @@
+//Kinga Majcher 272354
+
 #include <vector>
 #include <unordered_map>
 #include <queue>
@@ -106,4 +108,17 @@ void BipartiteGraph::printMatching() const {
             }
         }
     }
+}
+
+int BipartiteGraph::getTotalVertices() const {
+    return totalVertices;
+}
+
+int BipartiteGraph::getEdgeCapacity(int from, int to) const {
+    for (const auto& edge : adjList[from]) {
+        if (edge.to == to) {
+            return 1;
+        }
+    }
+    return 0;
 }

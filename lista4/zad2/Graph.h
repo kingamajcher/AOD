@@ -1,3 +1,5 @@
+//Kinga Majcher 272354
+
 #ifndef GRAPH_H
 #define GRAPH_H
 
@@ -20,6 +22,8 @@ public:
     BipartiteGraph(int k, int degree);
     int getMaxFlow();
     void printMatching() const;
+    int getTotalVertices() const;
+    int getEdgeCapacity(int from, int to) const;
 
 private:
     int source, sink, totalVertices;

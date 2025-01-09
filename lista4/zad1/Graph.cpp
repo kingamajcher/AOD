@@ -1,3 +1,5 @@
+//Kinga Majcher 272354
+
 #include <iostream>
 #include <cmath>
 #include <algorithm>
@@ -94,5 +96,18 @@ void Graph::printFlowDetails() const {
                 cout << i << " -> " << toggled << " : " << edgesCapacities[toggled][j] << "\n";
             }
         }
+    }
+}
+
+int Graph::getTotalVertices() const {
+    return totalVertices;
+}
+
+int Graph::getEdgeCapacity(int from, int to) const {
+    int differingBit = log2(from ^ to);
+    if (differingBit < k && (from ^ (1 << differingBit)) == to) {
+        return edgesCapacities[from][differingBit];
+    } else {
+        return 0;
     }
 }
