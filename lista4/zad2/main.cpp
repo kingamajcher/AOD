@@ -35,12 +35,9 @@ int main(int argc, char* argv[]) {
             graph.printMatching();
         }
 
-        if (argc >= 6 && (string(argv[5]) == "--JuMP" || string(argv[6]) == "--JuMP")) {
+        if (argc >= 7 && string(argv[6]) == "--glpk") {
             string filename = "zad2_LP.jl";
-            if (string(argv[5]) == "--JuMP"){
-                filename = argv[6];
-            }
-            else if (string(argv[6]) == "--JuMP"){
+            if (argc >= 8){
                 filename = argv[7];
             }
 

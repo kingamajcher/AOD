@@ -34,12 +34,9 @@ int main(int argc, char* argv[]) {
         if (argc >= 4 && string(argv[3]) == "--printFlow") {
             graph.printFlowDetails();
         }
-        if (argc >= 4 && (string(argv[3]) == "--JuMP" || string(argv[4]) == "--JuMP")) {
+        if (argc >= 5 && string(argv[4]) == "--glpk") {
             string filename = "zad1_LP.jl";
-            if (string(argv[3]) == "--JuMP"){
-                filename = argv[4];
-            }
-            else if (string(argv[4]) == "--JuMP"){
+            if (argc >= 6){
                 filename = argv[5];
             }
 
